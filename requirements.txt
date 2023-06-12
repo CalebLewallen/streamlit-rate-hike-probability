@@ -1,7 +1,3 @@
 streamlit
 pandas
 plotly.express
-calendar
-datetime
-math
-requests
