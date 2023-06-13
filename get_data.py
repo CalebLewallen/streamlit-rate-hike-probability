@@ -7,7 +7,7 @@ import pandas as pd
 
 def get_cme_data():
     """
-    This function takes no parameters and returns a tuple containing the trade_date_formatted [0] and futures_data_df [1]
+    This function takes no parameters and returns a tuple containing the trade_date_formatted [0], futures_data_df [1], and response.status_code [2]
     """
     # Request URL
     url = r"https://www.cmegroup.com/CmeWS/mvc/Quotes/Future/305/G"
@@ -15,18 +15,21 @@ def get_cme_data():
     # Store response
     response = rq.get(url)
 
-    # Format and print response
-    response_json = response.json()
-    futures_data_df = pd.json_normalize(response_json, record_path=['quotes'])
+    if response.status_code > 299:
+        return trade_date_formatted, futures_data_df, response.status_code
+    else:
+        # Format and print response
+        response_json = response.json()
+        futures_data_df = pd.json_normalize(response_json, record_path=['quotes'])
 
 
-    ### GET TRADE DATE ###
-    trade_date_df = pd.json_normalize(response_json)
-    trade_date = trade_date_df['tradeDate'][0]
+        ### GET TRADE DATE ###
+        trade_date_df = pd.json_normalize(response_json)
+        trade_date = trade_date_df['tradeDate'][0]
 
-    trade_date_formatted = dt.datetime.strptime(trade_date, "%d %b %Y").date()
+        trade_date_formatted = dt.datetime.strptime(trade_date, "%d %b %Y").date()
     
-    return trade_date_formatted, futures_data_df
+    return trade_date_formatted, futures_data_df, response.status_code
 
 
 
@@ -62,24 +65,28 @@ def get_futures_data():
 
     # Check to see if we need to update the fed funds trade data
     if last_upload_date == current_biz_date:
-        # print("We didn't retrieve anything from CME")
         pass
     
     elif last_upload_date < current_biz_date:
         # Grab futures data from CME
-        # print("I retrieved data from CME")
-        retrieve_dataframe = get_cme_data()[1]
-        # Write it to csv
-        retrieve_dataframe.to_csv(futures_data_csv_file, mode="w+")
 
-        # Write new trade date to 
-        trade_date = get_cme_data()[0]
-        date_file = open(file_name, "w+")
-        date_file.write(str(trade_date))
-        date_file.close()
+        # If the status code is in the 200's, then we should have gotten good data back and can overwrite the file
+        if get_cme_data()[2] <= 299:
 
-        # Retrieve CSV data
-    
+            retrieve_dataframe = get_cme_data()[1]
+           # Write it to csv
+            retrieve_dataframe.to_csv(futures_data_csv_file, mode="w+")
+
+            # Write new trade date to 
+            trade_date = get_cme_data()[0]
+            date_file = open(file_name, "w+")
+            date_file.write(str(trade_date))
+            date_file.close()
+
+        # If the codes are not in the 200's, then we want to skip the overwriting
+        else:
+            pass
+
 
     futures_data = pd.read_csv(futures_data_csv_file, header=0)
 
