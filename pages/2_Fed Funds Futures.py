@@ -11,6 +11,8 @@ st.set_page_config(
 
 st.title("What are Fed Funds Futures?")
 
+st.image(r"https://images.unsplash.com/photo-1618044733300-9472054094ee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&h=400&q=80")
+
 st.markdown("Fed Funds Futures are contracts against the value of Fed Funds. They're quoted as a price instead of a rate, like we're typically used to seeing. It's okay through, in order to covert to a rate, simply subtract the contract price from 100.")
 st.markdown("For example, if the contract you're viewing is priced at 94.88, then the implied rate in that contract is:")
 st.latex("100 - 94.88 = 5.12")

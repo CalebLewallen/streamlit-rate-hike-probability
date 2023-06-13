@@ -15,8 +15,6 @@ st.title("Fed Rate Hike Probabilities")
 
 st.image(r"https://images.unsplash.com/photo-1452696193712-6cabf5103b63?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&h=400&q=80")
 
-st.image(r"https://images.unsplash.com/photo-1618044733300-9472054094ee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&h=400&q=80")
-
 st.markdown("One of the most sought after questions during any tightening or loosening cycle is what the next policy decision is going to be from the FOMC. \
             Every armchair economist takes to Twitter and LinkedIn leading up to each meeting about why their contrarian viewpoint will hold true. Since I'm not \
             as smart as those individuals, I instead have to rely on what the market says about each meeting. To do this, we only need to look as far as a single \
