@@ -1,4 +1,5 @@
 import fed_funds_probability as ffp
+import get_data as gd
 
 
 def get_fomc_decision_data():
@@ -6,7 +7,7 @@ def get_fomc_decision_data():
     Returns 5 dataframes in a tuple: futures_data[0], meeting_data[1], complete_probability_tree[2], policy_moves[3], probabilty_tree_headers[4]
     """
     # Policy and market assumptions
-    current_fed_funds = 5.08 # This will need to be replaced by a request to the NY Fed at some point.
+    current_fed_funds = float(gd.get_effr())
     anticipated_policy_move = 0.25
     policy_move_threshold = 0.5
 
