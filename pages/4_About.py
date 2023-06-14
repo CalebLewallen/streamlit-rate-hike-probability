@@ -24,3 +24,10 @@ with st.container():
     bio_image = Image.open("files/caleb.png")
 
     col1.image(bio_image, caption='Caleb Lewallen', width=180)
+
+
+with st.container():
+    
+    st.subheader("Source Code")
+
+    st.markdown("You can view the source code for this site at the following repo: [streamlit-rate-hike-probability](https://github.com/CalebLewallen/streamlit-rate-hike-probability)")
