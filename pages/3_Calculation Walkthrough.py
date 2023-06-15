@@ -128,7 +128,7 @@ with st.container():
     # This will apply all the necessary styling to the probability tree df
     probability_tree_headers = ch.get_fomc_decision_data()[4]
     complete_probability_tree = ch.get_fomc_decision_data()[2].style.applymap(fh.highlight_nonzero_cells, subset=pd.IndexSlice[:, probability_tree_headers])
-    st.dataframe(complete_probability_tree)
+    st.dataframe(complete_probability_tree, use_container_width=True)
     st.divider()
 
 
