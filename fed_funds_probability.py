@@ -36,7 +36,16 @@ def retrieve_fomc_meeting_dates():
                     '2023-11-01', 
                     '2023-12-13']
     
-    return fomc_meetings
+    run_date = dt.datetime.today().date()
+
+    fomc_meetings_dates = string_to_date_list_conversion(fomc_meetings)
+
+    filter_fomc_meetings = []
+    for d in range(len(fomc_meetings_dates)):
+        if fomc_meetings_dates[d] >= run_date:
+            filter_fomc_meetings.append(fomc_meetings_dates[d])
+    
+    return filter_fomc_meetings
 
 ### COPY THIS LINE TO RETRIEVE THE LIST OF FOMC MEETING DATES
 # fomc_meetings = retrieve_fomc_meeting_dates()
@@ -67,7 +76,8 @@ def create_meeting_data_dataframe(futuresData, fomcMeetings, currentFedFunds):
     index_value = 0
 
     # Convert string values into dates
-    fomc_meetings_dates = string_to_date_list_conversion(fomcMeetings)
+    fomc_meetings_dates = fomcMeetings
+    # fomc_meetings_dates = filter(lambda dates: dates >= dt.datetime.today(), fomc_meetings_dates)
 
     for index, row in futuresData.iterrows():
         # Iterate the Index
