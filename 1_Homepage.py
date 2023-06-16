@@ -31,7 +31,7 @@ col1.metric("Next Policy Decision", policy_decisions['Policy Decision'][0])
 col2.metric("Policy Decision Confidence", "{0:.0%}".format(policy_decisions['Decision Confidence'][0]))
 
 st.write("Punch line first. Below are the market implied policy moves by the FOMC for all of the meetings that are currently scheduled past today, along with the confidence level for the meeting. \
-         Notice that the further into the future the meeting is, the confidence level decreases. This should intueitvely make sense, since we're less and less sure about events into the future, both \
+         Notice that the further into the future the meeting is, the confidence level decreases. This should intuitively make sense, since we're less and less sure about events into the future, both \
          from a time perspective *and* the fact each meeting's policy decision is influenced by what happens prior. Data comes from the CME Group and was last updated on " + trade_date + ".")
 
 st.header("Predicted FOMC Decisions")
