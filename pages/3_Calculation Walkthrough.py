@@ -4,6 +4,7 @@ from streamlit_extras.switch_page_button import switch_page
 import fed_funds_probability as ffp
 import pandas as pd
 import format_helper as fh
+import get_data as gd
 # import graphviz
 
 st.set_page_config(
@@ -73,6 +74,9 @@ st.divider()
 
 
 ### MAP OUT PROJECTED RATE MOVEMENTS ###
+
+current_effr = gd.get_effr()
+
 with st.container():
     col5_1, col5_2, col5_3 = st.columns([1, 4, 1])
     col5_2.subheader("Step 3: Build Projected Rate Movements")
@@ -82,6 +86,8 @@ with st.container():
     col5_2.markdown("- Rate movements only occur in months with Fed Meetings. Since we know the rate at the beginning of the month and the implied rate per the futures data, we can calculate the end rate with:")
     col5_2.markdown("$r_{ending} = ((r_{implied} / days_{total}) - (r_{begin} * days_{priortochange})) / days_{afterchange}$")
     col5_2.markdown("- We can only calculate probabilities as far out as we have planned FOMC Meetings. This means that as we approach the latter half of the year, we can only project out a couple of meetings until the FOMC publishes next year's meeting schedule.")
+
+    col5_2.markdown("Current EFFR: " + str('{:.3f}'.format(current_effr)))
 
     st.dataframe(ch.get_fomc_decision_data()[1], use_container_width=True)
 
