@@ -96,9 +96,18 @@ def get_futures_data():
 
 def get_effr():
 
-    url = r"https://markets.newyorkfed.org/read?productCode=50&eventCodes=500&limit=1&startPosition=0&sort=postDt:-1&format=json"
+    url = r"https://markets.newyorkfed.org/read?productCode=50&eventCodes=500&limit=25&startPosition=0&sort=postDt:-1&format=json"
     response = rq.get(url)
     json_object = response.json()
+    json_obj = json.dumps(json_object)
+    data = json.loads(json_obj)
+    obj_length = len(data['refRates'])
 
-    effr = json.dumps(json_object['refRates'][0]['percentRate'])
+    effr_list = []
+
+    for item in range(obj_length):
+        effr_list.append(float(json.dumps(json_object['refRates'][item]['percentRate'])))
+
+    effr = sum(effr_list) / len(effr_list)
+
     return effr
