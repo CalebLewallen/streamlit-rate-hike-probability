@@ -96,7 +96,7 @@ def get_futures_data():
 
 def get_effr():
 
-    url = r"https://markets.newyorkfed.org/read?productCode=50&eventCodes=500&limit=25&startPosition=0&sort=postDt:-1&format=json"
+    url = r"https://markets.newyorkfed.org/read?productCode=50&eventCodes=500&limit=1&startPosition=0&sort=postDt:-1&format=json"
     response = rq.get(url)
     json_object = response.json()
     json_obj = json.dumps(json_object)
