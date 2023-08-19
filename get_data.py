@@ -55,7 +55,7 @@ def get_futures_data():
     if current_date_weekday < 5: # Before Saturday
         current_biz_date = current_date
     elif current_date_weekday >= 5: # Sat or Sun
-        current_biz_date = current_date - BDay(1)
+        current_biz_date = current_date - dt.timedelta(1)
 
     # Get the date the last time our csv file was uploaded
     date_file = open(file_name, "r")
@@ -96,7 +96,7 @@ def get_futures_data():
 
 def get_effr():
 
-    url = r"https://markets.newyorkfed.org/read?productCode=50&eventCodes=500&limit=25&startPosition=0&sort=postDt:-1&format=json"
+    url = r"https://markets.newyorkfed.org/read?productCode=50&eventCodes=500&limit=1&startPosition=0&sort=postDt:-1&format=json"
     response = rq.get(url)
     json_object = response.json()
     json_obj = json.dumps(json_object)
