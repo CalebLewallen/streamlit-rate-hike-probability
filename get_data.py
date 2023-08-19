@@ -55,7 +55,7 @@ def get_futures_data():
     if current_date_weekday < 5: # Before Saturday
         current_biz_date = current_date
     elif current_date_weekday >= 5: # Sat or Sun
-        current_biz_date = current_date - BDay(1)
+        current_biz_date = current_date - dt.timedelta(1)
 
     # Get the date the last time our csv file was uploaded
     date_file = open(file_name, "r")
