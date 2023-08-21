@@ -29,3 +29,7 @@ def get_fomc_decision_data():
     policy_moves = ffp.anticipated_policy_moves(fomc_meetings, probability_tree_list, probability_tree_headers, policy_move_threshold)
 
     return futures_data, meeting_data, complete_probability_tree, policy_moves, probability_tree_headers
+
+
+
+# print(get_fomc_decision_data()[1])
