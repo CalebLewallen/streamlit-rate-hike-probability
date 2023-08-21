@@ -1,27 +1,15 @@
 import pandas as pd
-import plotly.express as px
 import datetime as dt
 import calendar as cal
 import math
 import get_data as gd
 
 
-### IMPORT FUTURES DATA ###
-def import_futures_data():
-
-    start_date = 20230101 
-    end_date = 20231231
-
-    futures_data = gd.get_futures_data()[1]
-
-    # Filter to just include 2023 dates
-    futures_data = futures_data[(futures_data['expirationDate'] >= start_date) & (futures_data['expirationDate'] <= end_date)]
-
-    # Convert expirationMonth column to full date
-    futures_data['expirationDate'] = futures_data['expirationDate'].apply(lambda new_date: dt.datetime.strptime(str(new_date), "%Y%m%d").date())
-
-    return futures_data
-
+# Convert fomc_meetings string values into dates
+def string_to_date_list_conversion(dateList):
+    for date in range(len(dateList)):
+        dateList[date] = dt.datetime.strptime(dateList[date], "%Y-%m-%d").date()
+    return dateList
 
 ### SET UP CALCULATION VALUES ###
 # current_fed_funds = 5.08 # This will need to be replaced by a request to the NY Fed at some point.
@@ -40,9 +28,7 @@ def retrieve_fomc_meeting_dates():
                     '2024-05-01',
                     '2024-06-12',
                     '2024-07-31',
-                    '2024-09-18',
-                    '2024-11-07',
-                    '2024-12-18']
+                    '2024-09-18']
     
     run_date = dt.datetime.today().date()
 
@@ -55,14 +41,29 @@ def retrieve_fomc_meeting_dates():
     
     return filter_fomc_meetings
 
+
+### IMPORT FUTURES DATA ###
+def import_futures_data():
+
+    last_meeting = max(retrieve_fomc_meeting_dates())
+    last_meeting_last_day = cal.monthrange(last_meeting.year, last_meeting.month)[1]
+
+    start_date = int(dt.date(dt.date.today().year,dt.date.today().month,1).strftime("%Y%m%d"))
+    end_date = int(dt.date(last_meeting.year, last_meeting.month, last_meeting_last_day).strftime("%Y%m%d"))
+
+    futures_data = gd.get_futures_data()[1]
+
+    # Filter to just include 2023 dates
+    futures_data = futures_data[(futures_data['expirationDate'] >= start_date) & (futures_data['expirationDate'] <= end_date)]
+
+    # Convert expirationMonth column to full date
+    futures_data['expirationDate'] = futures_data['expirationDate'].apply(lambda new_date: dt.datetime.strptime(str(new_date), "%Y%m%d").date())
+
+    return futures_data
+
+
 ### COPY THIS LINE TO RETRIEVE THE LIST OF FOMC MEETING DATES
 # fomc_meetings = retrieve_fomc_meeting_dates()
-
-# Convert fomc_meetings string values into dates
-def string_to_date_list_conversion(dateList):
-    for date in range(len(dateList)):
-        dateList[date] = dt.datetime.strptime(dateList[date], "%Y-%m-%d").date()
-    return dateList
 
 # We'll use this function to see if there's a meeting in one of our expiry months
 def date_match(expiryDate, fomcMeetingDate):
@@ -91,6 +92,12 @@ def create_meeting_data_dataframe(futuresData, fomcMeetings, currentFedFunds):
         # Iterate the Index
         index_value += 1
 
+        if index < len(futuresData) - 1:
+            next_row = futuresData.iloc[index + 1]
+
+        else:
+            pass
+
         # Grab relevant rows from dataframe
         expiry_date = row["expirationDate"]
         price = row["last"]
@@ -103,6 +110,7 @@ def create_meeting_data_dataframe(futuresData, fomcMeetings, currentFedFunds):
             date_check = date_match(expiry_date, fomc_meetings_dates[i])
             if date_check == 1:
                 meeting_day = fomc_meetings_dates[i].day
+                last_day_of_month = cal.monthrange(fomc_meetings_dates[i].year, fomc_meetings_dates[i].month)[1]
                 break
             else:
                 meeting_day = 0
@@ -113,6 +121,8 @@ def create_meeting_data_dataframe(futuresData, fomcMeetings, currentFedFunds):
         month_range_calc = cal.monthrange(expiry_date_year, expiry_date_month)
 
         month_end_day = month_range_calc[1]
+
+        # print(meeting_day, month_end_day)
 
         #Calculate the Days after meeting
         days_after_meeting = month_end_day - meeting_day
@@ -131,8 +141,12 @@ def create_meeting_data_dataframe(futuresData, fomcMeetings, currentFedFunds):
             None
 
         # Calculate the Month Ending Rate
-        if meeting_day == 0:
+        if (meeting_day == 0):
             end_month_rate = beg_month_rate
+
+        elif meeting_day == month_end_day:
+            # print("It worked")
+            end_month_rate = 100 - float(next_row["last"])
 
         elif meeting_day != 0:
             end_month_rate = ((implied_rate * month_end_day) - (beg_month_rate * meeting_day)) / days_after_meeting
@@ -156,6 +170,7 @@ def create_meeting_data_dataframe(futuresData, fomcMeetings, currentFedFunds):
     meeting_data_df = pd.DataFrame(meeting_data[1:], columns=meeting_data[0])
     return meeting_data_df
 
+
 ### Builds the isolated probabilty events. Requires fomce_meetings, create_meeting_data_dataframe(), and anticipated_policy_move variables
 def build_probability_events(fomcMeetings, meetingData, policyMove):
     
@@ -168,6 +183,8 @@ def build_probability_events(fomcMeetings, meetingData, policyMove):
         adjusted_fomc_meetings.append(replaced_date)
 
     fomcMeetings_df = pd.DataFrame({"Expiry Month":adjusted_fomc_meetings})
+    # print(adjusted_fomc_meetings)
+    # print(meetingData)
 
     joined_list = pd.merge(fomcMeetings_df,
                            meetingData[['Expiry Month', 'Change']],
