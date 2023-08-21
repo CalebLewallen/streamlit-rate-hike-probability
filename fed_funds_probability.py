@@ -110,7 +110,7 @@ def create_meeting_data_dataframe(futuresData, fomcMeetings, currentFedFunds):
             date_check = date_match(expiry_date, fomc_meetings_dates[i])
             if date_check == 1:
                 meeting_day = fomc_meetings_dates[i].day
-                last_day_of_month = cal.monthrange(fomc_meetings_dates[i].year, fomc_meetings_dates[i].month)[1]
+                # last_day_of_month = cal.monthrange(fomc_meetings_dates[i].year, fomc_meetings_dates[i].month)[1]
                 break
             else:
                 meeting_day = 0
