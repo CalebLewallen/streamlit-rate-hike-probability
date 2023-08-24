@@ -28,7 +28,9 @@ def retrieve_fomc_meeting_dates():
                     '2024-05-01',
                     '2024-06-12',
                     '2024-07-31',
-                    '2024-09-18']
+                    '2024-09-18',
+                    '2024-11-07',
+                    '2024-12-18']
     
     run_date = dt.datetime.today().date()
 
@@ -100,7 +102,11 @@ def create_meeting_data_dataframe(futuresData, fomcMeetings, currentFedFunds):
 
         # Grab relevant rows from dataframe
         expiry_date = row["expirationDate"]
-        price = row["last"]
+        
+        if row['last'] == '-':
+            price = row['priorSettle']
+        else:
+            price = row["last"]
 
         #Calculate the implied rate that the futures contract corresponds to
         implied_rate = 100 - float(price)
@@ -285,11 +291,11 @@ def create_probability_tree(fomcMeetings, probabilityEvents, anticipatedPolicyMo
             None
 
     for hike_prob in range(len(probability_tree)):
-        hike = sum(probability_tree[hike_prob][6:])
+        hike = sum(probability_tree[hike_prob][meeting_count+1:])
         cumulative_hike_probabilities.append(hike)
 
     for cut_prob in range(len(probability_tree)):
-        cut = sum(probability_tree[cut_prob][0:4])
+        cut = sum(probability_tree[cut_prob][0:meeting_count])
         cumulative_cut_probabilities.append(cut)
     
     probability_df = pd.DataFrame(probability_tree[0:], columns=probability_tree_headers)
@@ -322,7 +328,7 @@ def anticipated_policy_moves(fomcMeetings, probabilityTreeList, probabilityTreeH
     for row in range(len(probabilityTreeList)):
 
         hike_probability = sum(probabilityTreeList[row][sum_position+1:])
-        cut_probability = sum(probabilityTreeList[row][0:sum_position-1])
+        cut_probability = sum(probabilityTreeList[row][0:sum_position])
         no_move_probability = probabilityTreeList[row][sum_position]
 
         if hike_probability >= policyMoveThreshold:

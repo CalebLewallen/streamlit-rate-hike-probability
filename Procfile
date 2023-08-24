@@ -1,2 +1,2 @@
 # Modify this Procfile to fit your needs
-web: pip install requirements.txt && streamlit run 1_Homepage.py
+web: sh setup.sh && streamlit run 1_Homepage.py

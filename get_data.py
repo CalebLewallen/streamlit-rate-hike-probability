@@ -33,7 +33,6 @@ def get_cme_data():
     return trade_date_formatted, futures_data_df, response.status_code
 
 
-
 def get_futures_data():
 
     """
