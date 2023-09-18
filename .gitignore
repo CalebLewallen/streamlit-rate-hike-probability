@@ -2,3 +2,5 @@ setup.sh
 Procfile
 fly.toml
 fed_funds_futures_quotes.csv
+.streamlit
+__pycache__
