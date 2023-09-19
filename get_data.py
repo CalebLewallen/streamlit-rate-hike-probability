@@ -17,7 +17,9 @@ def get_cme_data():
     response = rq.get(url)
 
     if response.status_code > 299:
-        return trade_date_formatted, futures_data_df, response.status_code
+        # raise Exception("Could not retrieve data from CME Group")
+        return None, None, response.status_code
+    
     else:
         # Format and print response
         response_json = response.json()
@@ -110,3 +112,8 @@ def get_effr():
     effr = sum(effr_list) / len(effr_list)
 
     return effr
+
+
+
+if __name__ == '__main__':
+    print(get_cme_data())
