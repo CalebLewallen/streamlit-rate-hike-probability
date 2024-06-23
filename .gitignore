@@ -5,3 +5,4 @@ fed_funds_futures_quotes.csv
 .streamlit
 __pycache__
 *.pyc
+venv/*

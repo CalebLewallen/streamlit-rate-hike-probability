@@ -1,5 +1,5 @@
-import fed_funds_probability as ffp
-import get_data as gd
+import src.fed_funds_probability as ffp
+import src.get_data as gd
 
 
 def get_fomc_decision_data():

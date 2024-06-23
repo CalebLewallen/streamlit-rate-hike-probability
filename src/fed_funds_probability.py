@@ -2,7 +2,7 @@ import pandas as pd
 import datetime as dt
 import calendar as cal
 import math
-import get_data as gd
+import src.get_data as gd
 
 
 # Convert fomc_meetings string values into dates
@@ -268,7 +268,7 @@ def create_probability_tree(fomcMeetings, probabilityEvents, anticipatedPolicyMo
             max_node = starting_node       
             
             probability_tree[meeting][max_node] = 1 - abs(isolated_probability)
-            probability_tree[meeting][min_node] = isolated_probability
+            probability_tree[meeting][min_node] = abs(isolated_probability)
 
         ### TREE LOGIC ###
 
@@ -285,7 +285,7 @@ def create_probability_tree(fomcMeetings, probabilityEvents, anticipatedPolicyMo
             max_node = max_node
 
             for node in range(min_node, max_node + 1):
-                probability_tree[meeting][node] = (abs(isolated_probability)*probability_tree[meeting - 1][node + 1]) + ((1- abs(isolated_probability))*probability_tree[meeting-1][node])
+                probability_tree[meeting][node] = (probability_tree[meeting - 1][node + 1] * abs(isolated_probability)) + ((1 - abs(isolated_probability)) * probability_tree[meeting - 1][node])
         
         else:
             None

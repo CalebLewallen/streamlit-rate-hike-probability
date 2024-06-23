@@ -1,6 +1,6 @@
 import streamlit as st
-import calc_helper as ch
-import get_data as gd
+import src.calc_helper as ch
+import src.get_data as gd
 import plotly.express as px
 
 policy_decisions = ch.get_fomc_decision_data()[3]
