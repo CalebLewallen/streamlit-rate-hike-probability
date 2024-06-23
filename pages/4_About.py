@@ -22,12 +22,14 @@ with st.container():
     strategy to establish and lead a team in optimizing data practices as they expanded into new customer
     segments. Caleb is now working for Wells Fargo, where he is building an operational data capability within the
     bank. You can connect with Caleb on [LinkedIn](https://www.linkedin.com/in/caleb-lewallen-b8699365/)."""
-    
     )
+    
+    col2.markdown("See some of Caleb's writing at https://caleblewallen.com/")
 
     bio_image = Image.open("files/caleb.png")
 
     col1.image(bio_image, caption='Caleb Lewallen', width=180)
+
 
 
 with st.container():
